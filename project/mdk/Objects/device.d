@@ -1,5 +1,5 @@
-./objects/main.o: ..\user\src\main.c ..\code\config\include.h \
-  ..\code\config\device.h ..\code\device\JGA25.h ..\code\device\motor.h \
+./objects/device.o: ..\code\config\device.c ..\code\config\device.h \
+  ..\code\device\JGA25.h ..\code\device\motor.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
   ..\code\device\qencoder.h ..\code\device\qencoder.h \
   ..\code\config\driver.h ..\..\libraries\zf_common\zf_common_headfile.h \

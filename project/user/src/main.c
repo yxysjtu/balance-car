@@ -33,33 +33,7 @@
 * 2022-09-21        SeekFree            first version
 ********************************************************************************************************************/
 
-#include "zf_common_headfile.h"
-
-// 打开新的工程或者工程移动了位置务必执行以下操作
-// 第一步 关闭上面所有打开的文件
-// 第二步 project->clean  等待下方进度条走完
-
-// 本例程是开源库移植用空工程
-#define LED		(B9)
-#define PWM_CH1                 (PWM2_MODULE0_CHA_C6)
-#define PWM_CH2                 (PWM2_MODULE2_CHA_C10)
-#define INT1	(C7)
-#define INT2	(C8)
-#define INT3	(C11)
-#define INT4	(D2)
-#define PWM_FREQ	(17000)
-
-int16 motorL_v = 0;
-int16 motorR_v = 0;
-
-void motor_init(){
-	gpio_init(INT1, GPO, 1, GPO_PUSH_PULL);
-	gpio_init(INT2, GPO, 1, GPO_PUSH_PULL);
-	gpio_init(INT3, GPO, 1, GPO_PUSH_PULL);
-	gpio_init(INT4, GPO, 1, GPO_PUSH_PULL);
-	pwm_init(PWM_CH1, PWM_FREQ, 0);                                                // 初始化 PWM 通道 频率 17KHz 初始占空比 0%
-    pwm_init(PWM_CH2, PWM_FREQ, 0); 
-}
+#include "include.h"
 
 
 
@@ -68,29 +42,18 @@ int main(void)
     clock_init(SYSTEM_CLOCK_600M);  // 不可删除
     debug_init();                   // 调试端口初始化
 
-    // 此处编写用户代码 例如外设初始化代码等
 	gpio_init(LED, GPO, 0, GPO_PUSH_PULL);
 	
-	motor_init();
+	JGA25_init(&motorL);
     
-    // 此处编写用户代码 例如外设初始化代码等
+	motorL.attr.state = MOTOR_RUN;
+	motorL.attr.intensity = 5000;
     while(1)
     {
-        // 此处编写需要循环执行的代码
         gpio_toggle_level(LED);              // 翻转引脚电平
-        system_delay_ms(500);   
+        system_delay_ms(1);   
         
-		for(motorL_v = 0; motorL_v < PWM_DUTY_MAX; motorL_v++){
-			pwm_set_duty(PWM_CH1, motorL_v); 
-			pwm_set_duty(PWM_CH2, PWM_DUTY_MAX / 2); 
-			system_delay_us(1000);
-		}
-		for(; motorL_v >0; motorL_v--){
-			pwm_set_duty(PWM_CH1, motorL_v); 
-			pwm_set_duty(PWM_CH2, PWM_DUTY_MAX / 2); 
-			system_delay_us(1000);
-		}
-        // 此处编写需要循环执行的代码
+		JGA25_Handle(&motorL);
     }
 }
 
