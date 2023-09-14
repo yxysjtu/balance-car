@@ -19,3 +19,7 @@ JGA25 motorR = {
     .reduction_rate = 34,
     .radius = 37.2 / 1000
 };
+
+IMU imu = {
+    .state = IMU_NOT_INIT
+};

@@ -46,10 +46,12 @@ void CSI_IRQHandler(void)
     __DSB();                    // 数据同步隔离
 }
 
+extern void main_Handle();
 void PIT_IRQHandler(void)
 {
     if(pit_flag_get(PIT_CH0))
     {
+		main_Handle();
         pit_flag_clear(PIT_CH0);
     }
     

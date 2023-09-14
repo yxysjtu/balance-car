@@ -45,17 +45,32 @@ int main(void)
 	gpio_init(LED, GPO, 0, GPO_PUSH_PULL);
 	
 	JGA25_init(&motorL);
+	JGA25_init(&motorR);
+	
+	IMU_init(&imu);
+	
+	pit_ms_init(PIT_CH0, 1);        
+    interrupt_set_priority(PIT_IRQn, 0);  
     
 	motorL.attr.state = MOTOR_RUN;
 	motorL.attr.intensity = 5000;
     while(1)
     {
         gpio_toggle_level(LED);              // 翻转引脚电平
-        system_delay_ms(1);   
+        system_delay_ms(500);   
         
-		JGA25_Handle(&motorL);
+		
     }
 }
 
+unsigned long int main_handle_cnt = 0;
+void main_Handle(){
+	main_handle_cnt++;
+	
+	JGA25_Handle(&motorL);
+	JGA25_Handle(&motorR);
+	
+	IMU_Handle(&imu);
+}
 
 

@@ -2025,6 +2025,11 @@
               <FileType>1</FileType>
               <FilePath>..\code\device\qencoder.c</FilePath>
             </File>
+            <File>
+              <FileName>imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\device\imu.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2057,6 +2062,16 @@
               <FileName>device.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\code\config\device.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>car_algorithm</GroupName>
+          <Files>
+            <File>
+              <FileName>pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\algorithm\pid.c</FilePath>
             </File>
           </Files>
         </Group>

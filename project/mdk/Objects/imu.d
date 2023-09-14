@@ -1,10 +1,7 @@
-./objects/main.o: ..\user\src\main.c ..\code\config\include.h \
-  ..\code\config\device.h ..\code\device\JGA25.h ..\code\device\motor.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
-  ..\code\device\qencoder.h ..\code\device\qencoder.h \
-  ..\code\device\imu.h ..\code\config\driver.h \
-  ..\..\libraries\zf_common\zf_common_headfile.h \
+./objects/imu.o: ..\code\device\imu.c ..\code\device\imu.h \
+  ..\code\config\driver.h ..\..\libraries\zf_common\zf_common_headfile.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
   ..\..\libraries\sdk\drives\fsl_common.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\assert.h \
