@@ -4,7 +4,7 @@
 #include "config.h"
 
 typedef struct{
-    float target;
+    float *target;
     float *feedback;
     float err;
 

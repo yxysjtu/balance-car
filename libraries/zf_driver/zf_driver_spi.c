@@ -127,6 +127,23 @@ void spi_write(spi_index_enum spi_n, const uint8 *txdata, uint8 *rxdata, uint32 
     }while(transfer_status == kStatus_LPSPI_Busy);
 }
 
+lpspi_master_handle_t g_m_handle; //global variable
+void spi_write_itr(spi_index_enum spi_n, const uint8 *txdata, uint8 *rxdata, uint32 length, uint8 continuous)
+{
+    uint32 transfer_status;
+    lpspi_transfer_t transfer;
+
+    zf_assert(0 < length);               // 断言字节数不为0
+    
+    if(continuous)  transfer.configFlags = ((spi_cs_index[spi_n]%16/2)<<LPSPI_MASTER_PCS_SHIFT) | kLPSPI_MasterPcsContinuous;
+    else            transfer.configFlags = ((spi_cs_index[spi_n]%16/2)<<LPSPI_MASTER_PCS_SHIFT);
+    transfer.txData = (uint8 *)txdata;
+    transfer.rxData = rxdata;
+    transfer.dataSize = length;
+    
+	LPSPI_MasterTransferNonBlocking(spi_index[spi_n], &g_m_handle, &transfer);
+    
+}
 
 #ifndef SPI_SPEED_PRIORITY
 //-------------------------------------------------------------------------------------------------------------------
@@ -673,6 +690,83 @@ void spi_init (spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, spi_sck_pi
     LPSPI_Reset(spi_index[spi_n]);                               //复位外设
     LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//重新初始化设置正确的参数
     
+    LPSPI_Enable(spi_index[spi_n], false);
+    spi_index[spi_n]->CFGR1 &= (~LPSPI_CFGR1_NOSTALL_MASK);
+    LPSPI_Enable(spi_index[spi_n], true);
+
+    LPSPI_FlushFifo(spi_index[spi_n], true, true);                       //刷新FIFO
+    LPSPI_ClearStatusFlags(spi_index[spi_n], kLPSPI_AllStatusFlag);      //清除状态标志
+    LPSPI_DisableInterrupts(spi_index[spi_n], kLPSPI_AllInterruptEnable);//关闭中断
+}
+
+void SPI_init(spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, uint8_t dir, uint32_t txdelayns, spi_sck_pin_enum sck_pin, spi_mosi_pin_enum mosi_pin, spi_miso_pin_enum miso_pin, spi_cs_pin_enum cs_pin){
+    zf_assert(spi_n == (sck_pin / 16));                                         // sck_pin  与 spi_n 匹配
+    zf_assert(spi_n == (mosi_pin / 16));                                        // mosi_pin 与 spi_n 匹配
+    zf_assert(spi_n == (miso_pin / 16) || (miso_pin == SPI_MISO_NULL));         // miso_pin 与 spi_n 匹配
+    zf_assert(spi_n == (cs_pin / 16) || (cs_pin == SPI_CS_NULL));               // cs_pin   与 spi_n 匹配
+  
+    if(SPI_CS_NULL == cs_pin)
+    {
+        spi_cs_index[spi_n] = 0;
+    }
+    else
+    {
+        spi_cs_index[spi_n] = cs_pin;
+    }
+    
+    
+    lpspi_master_config_t masterConfig;
+    uint32 src_clock;
+    
+    spi_iomuxc(spi_n, sck_pin, mosi_pin, miso_pin, cs_pin);
+
+    CLOCK_SetMux(kCLOCK_LpspiMux, LPSPI_CLK_SRC);    //选择PLL2作为LPSPI时钟源
+    CLOCK_SetDiv(kCLOCK_LpspiDiv, LPSPI_CLK_DIV);
+    
+    LPSPI_MasterGetDefaultConfig(&masterConfig);
+    masterConfig.baudRate = baud;
+    masterConfig.bitsPerFrame = 8;
+    masterConfig.whichPcs = (lpspi_which_pcs_t)(cs_pin%14/2-3);
+    masterConfig.direction = dir;
+    
+    switch(mode)
+    {
+        case SPI_MODE0:
+        {
+            masterConfig.cpol = kLPSPI_ClockPolarityActiveHigh; 
+            masterConfig.cpha = kLPSPI_ClockPhaseFirstEdge; 
+        }break;
+        
+        case SPI_MODE1:
+        {
+            masterConfig.cpol = kLPSPI_ClockPolarityActiveHigh; 
+            masterConfig.cpha = kLPSPI_ClockPhaseSecondEdge; 
+        }break;
+        
+        case SPI_MODE2:
+        {
+            masterConfig.cpol = kLPSPI_ClockPolarityActiveLow; 
+            masterConfig.cpha = kLPSPI_ClockPhaseFirstEdge; 
+        }break;
+        
+        case SPI_MODE3:
+        {
+            masterConfig.cpol = kLPSPI_ClockPolarityActiveLow; 
+            masterConfig.cpha = kLPSPI_ClockPhaseSecondEdge; 
+        }break;
+    }
+
+    masterConfig.pcsToSckDelayInNanoSec = 1000000000 / masterConfig.baudRate;
+    masterConfig.lastSckToPcsDelayInNanoSec = 1000000000 / masterConfig.baudRate;
+    masterConfig.betweenTransferDelayInNanoSec = txdelayns;
+    src_clock = (CLOCK_GetFreq(kCLOCK_SysPllClk) / (LPSPI_CLK_DIV + 1U));
+    
+    LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//第一次初始化便于打开时钟
+    LPSPI_Reset(spi_index[spi_n]);                               //复位外设
+    LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//重新初始化设置正确的参数
+    
+	LPSPI_MasterTransferCreateHandle(spi_index[spi_n], &g_m_handle, NULL, NULL);
+	
     LPSPI_Enable(spi_index[spi_n], false);
     spi_index[spi_n]->CFGR1 &= (~LPSPI_CFGR1_NOSTALL_MASK);
     LPSPI_Enable(spi_index[spi_n], true);

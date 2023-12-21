@@ -5,7 +5,7 @@
 #include "qencoder.h"
 
 typedef struct{
-    Motor_t attr;
+    Motor_t motor;
 
     uint8_t PWM_pin;
     uint8_t IN1_pin;
@@ -14,6 +14,7 @@ typedef struct{
     QEncoder encoder;
     float reduction_rate;
     float radius;
+    float deadzone;
     //TODO: PID controller
 
 } JGA25;

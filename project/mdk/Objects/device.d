@@ -2,7 +2,9 @@
   ..\code\device\JGA25.h ..\code\device\motor.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
   ..\code\device\qencoder.h ..\code\device\qencoder.h \
-  ..\code\device\imu.h ..\code\config\driver.h \
+  ..\code\device\imu.h ..\code\device\remote.h ..\code\device\balance.h \
+  ..\code\device\chassis.h ..\code\device\imu.h ..\code\algorithm\pid.h \
+  ..\code\config\config.h ..\code\config\driver.h \
   ..\..\libraries\zf_common\zf_common_headfile.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \

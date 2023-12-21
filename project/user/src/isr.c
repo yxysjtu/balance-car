@@ -46,32 +46,6 @@ void CSI_IRQHandler(void)
     __DSB();                    // 数据同步隔离
 }
 
-extern void main_Handle();
-void PIT_IRQHandler(void)
-{
-    if(pit_flag_get(PIT_CH0))
-    {
-		main_Handle();
-        pit_flag_clear(PIT_CH0);
-    }
-    
-    if(pit_flag_get(PIT_CH1))
-    {
-        pit_flag_clear(PIT_CH1);
-    }
-    
-    if(pit_flag_get(PIT_CH2))
-    {
-        pit_flag_clear(PIT_CH2);
-    }
-    
-    if(pit_flag_get(PIT_CH3))
-    {
-        pit_flag_clear(PIT_CH3);
-    }
-
-    __DSB();
-}
 
 void LPUART1_IRQHandler(void)
 {

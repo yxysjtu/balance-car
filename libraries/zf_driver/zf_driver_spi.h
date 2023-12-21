@@ -110,6 +110,8 @@ typedef enum                                                                    
     SPI_MAX,
 }spi_index_enum;
 
+void spi_write_itr(spi_index_enum spi_n, const uint8 *txdata, uint8 *rxdata, uint32 length, uint8 continuous);
+
 void        spi_write_8bit                  (spi_index_enum spi_n, const uint8 data);
 void        spi_write_8bit_array            (spi_index_enum spi_n, const uint8 *data, uint32 len);
 
@@ -138,7 +140,7 @@ void        spi_transfer_8bit               (spi_index_enum spi_n, const uint8 *
 void        spi_transfer_16bit              (spi_index_enum spi_n, const uint16 *write_buffer, uint16 *read_buffer, uint32 len);
 
 void        spi_init                        (spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, spi_sck_pin_enum sck_pin, spi_mosi_pin_enum mosi_pin, spi_miso_pin_enum miso_pin, spi_cs_pin_enum cs_pin);
-
+void SPI_init(spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, uint8_t dir, uint32_t txdelayns, spi_sck_pin_enum sck_pin, spi_mosi_pin_enum mosi_pin, spi_miso_pin_enum miso_pin, spi_cs_pin_enum cs_pin);
 #ifdef COMPATIBLE_WITH_OLDER_VERSIONS                                           // 兼容旧版本开源库接口名称
 #define spi_mosi(spi_n, mosi, miso, len)    (spi_transfer_8bit((spi_n), (mosi), (miso), (len)))
 #endif

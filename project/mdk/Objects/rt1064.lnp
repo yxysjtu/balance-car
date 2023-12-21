@@ -153,6 +153,8 @@
 ".\objects\jga25.o"
 ".\objects\qencoder.o"
 ".\objects\imu.o"
+".\objects\remote.o"
+".\objects\balance.o"
 ".\objects\device.o"
 ".\objects\pid.o"
 --library_type=microlib --diag_suppress 6314,6329 --strict --scatter ".\scf\MIMXRT1064xxxxx_flexspi_nor.scf"

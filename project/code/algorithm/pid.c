@@ -1,8 +1,8 @@
 #include "pid.h"
 
 float PID_calc(PID *this){
-    float err = this->target - *(this->feedback);
-    this->component_d = (err - this->err) * this->kd;
+    float err = *(this->target) - *(this->feedback);
+    this->component_d = 0.9 * this->component_d + (err - this->err) * this->kd * 0.1;
     this->component_i +=  err * this->ki;
     this->component_p = err * this->kp;
     INRANGE(this->component_p, this->component_p_max);
