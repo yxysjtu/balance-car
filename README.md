@@ -30,4 +30,11 @@ https://github.com/yxysjtu/balance-car/assets/53338300/aa7eaeba-0b58-460f-a057-3
 
 https://github.com/yxysjtu/balance-car/assets/53338300/5409dca4-b936-4faa-8d91-5078e0ee0611
 
+(小车移动)
+
+
+https://github.com/yxysjtu/balance-car/assets/53338300/5f064450-5e2c-455b-80fd-9ed556b49235
+
+
+
 
