@@ -55,11 +55,11 @@ Balance_chassis balance = {
         .target = 0,
 
         .kp = -600,
-        .ki = 0,
-        .kd = 0,
+        .ki = -0.12,
+        .kd = 100000,
 
         .component_p_max = 10000,
-        .component_i_max = 600,
+        .component_i_max = 3000,
         .component_d_max = 10000,
         .output_max = 5000
     },

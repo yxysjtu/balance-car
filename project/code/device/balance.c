@@ -94,7 +94,7 @@ void Balance_Handle(Balance_chassis* this){
     this->pitch_sin = sin(this->chassis.pitch_ang / 180 * M_PI) / M_PI * 180;
 
     PID_calc(&(this->pitch_ang_pid));
-    this->forward_v_pid.ki = this->forward_v_pid.kp / 200 / 25;
+    //this->forward_v_pid.ki = this->forward_v_pid.kp / 200 / 25;
     PID_calc(&(this->forward_v_pid));
     PID_calc(&(this->rotate_v_pid));
 

@@ -41,8 +41,14 @@ void main_Handle(){
 	
 	if(remote.state == REMOTE_START){
 		balance.chassis.state = CHASSIS_RUN;
-		balance.chassis.forward_v_set = (float)(remote.RY - 0x7f) / 256 * 10;
-		balance.chassis.rotate_v_set = (float)(remote.RX - 0x7f) / 256 * 30;
+		float v_set = (float)(remote.RY - 0x7f) / 256 * 10;
+		if(abs(v_set) > abs(balance.chassis.forward_v_set)){
+			balance.chassis.forward_v_set = balance.chassis.forward_v_set * 0.9998 + v_set * 0.0002;
+		}else{
+			balance.chassis.forward_v_set = balance.chassis.forward_v_set * 0.999 + v_set * 0.001;
+		}
+		
+		balance.chassis.rotate_v_set = balance.chassis.rotate_v_set * 0.99 + (float)(remote.RX - 0x7f) / 256 * 16 * 0.01;
 	}else{
 		balance.chassis.state = CHASSIS_STOP;
 	}
